@@ -14,6 +14,5 @@ dependencies {
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
     modApi "mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version}"
-    modApi "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
 
 }
