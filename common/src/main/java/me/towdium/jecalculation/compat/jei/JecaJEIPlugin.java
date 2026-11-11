@@ -108,11 +108,13 @@ public class JecaJEIPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         runtime = jeiRuntime;
         ModCompat.isJEILoaded = true;
-        if (Platform.isForge())
+        if (Platform.isForgeLike())
             try {
-                FORGE_FLUID_INGREDIENT_CLASS = Class.forName("net.minecraftforge.fluids.FluidStack");
+                FORGE_FLUID_INGREDIENT_CLASS = Class.forName(Platform.isNeoForge()
+                        ? "net.neoforged.neoforge.fluids.FluidStack"
+                        : "net.minecraftforge.fluids.FluidStack");
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Forge fluid ingredient class should exist!", e);
+                throw new RuntimeException("Forge-like fluid ingredient class should exist!", e);
             }
         if (Platform.isFabric())
             try {

@@ -146,7 +146,7 @@ public class Utilities {
         throw new AssertionError();
     }
 
-    public static TagKey<Item> IRON_INGOTS = tag(Registries.ITEM, Platform.isForge() ? "ingots/iron" : "iron_ingots");
+    public static TagKey<Item> IRON_INGOTS = tag(Registries.ITEM, Platform.isForgeLike() ? "ingots/iron" : "iron_ingots");
 
     public static <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> key, String tag) {
         return TagKey.create(key, ResourceLocation.fromNamespaceAndPath(getTagNamespace(), tag));
