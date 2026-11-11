@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+issueTrackerURL="https://github.com/Towdium/JustEnoughCalculation/issues"
+license="The MIT License (MIT)"
+
+[[mods]]
+modId="jecalculation"
+version="${version}"
+displayName="Just Enough Calculation"
+displayURL="https://github.com/Towdium/JustEnoughCalculation"
+credits="Thanks to the NeoForge and FML teams; along with sesess, Pahimar, MrCrayfish and BedrockMiner for their tutorial."
+authors="Towdium, MorningSage, 6LeoY"
+description="A simple mod to help you with recipe calculation."
+logoFile="icon.png"
+
+[[dependencies.jecalculation]]
+modId="architectury"
+type="required"
+versionRange="[13.0.11,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.jecalculation]]
+modId="jei"
+type="optional"
+versionRange="[19.54.0.429,)"
+ordering="BEFORE"
+side="BOTH"

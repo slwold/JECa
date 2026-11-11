@@ -7,6 +7,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.networking.NetworkChannel;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
+import dev.architectury.utils.Env;
 import me.towdium.jecalculation.data.Controller;
 import me.towdium.jecalculation.data.label.ILabel;
 import me.towdium.jecalculation.data.label.labels.LPlaceholder;
@@ -47,7 +48,7 @@ public class JustEnoughCalculation {
     public JustEnoughCalculation() {
         JecaItem.register();
         registerEvents();
-        if (Platform.getEnv() == EnvType.CLIENT)
+        if (Platform.getEnvironment() == Env.CLIENT)
             registerClientEvents();
 
         //noinspection ResultOfMethodCallIgnored

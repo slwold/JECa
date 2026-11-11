@@ -9,7 +9,6 @@ pluginManagement {
 }
 
 include("common")
-// neoforge 模块依赖 net.neoforged 全家族，本地仓库暂缺，先单独编译 common 取错误清单
-// include("neoforge")
+include("neoforge")
 
 rootProject.name = "jecalculation"
