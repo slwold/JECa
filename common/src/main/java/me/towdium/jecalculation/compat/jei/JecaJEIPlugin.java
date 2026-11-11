@@ -16,9 +16,8 @@ import mezz.jei.api.gui.handlers.IGlobalGuiHandler;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
-import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import mezz.jei.api.recipe.transfer.IUniversalRecipeTransferHandler;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -31,7 +30,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -51,7 +49,6 @@ import static me.towdium.jecalculation.compat.ModCompat.merge;
 @ParametersAreNonnullByDefault
 public class JecaJEIPlugin implements IModPlugin {
 
-    private static final RecipeType<Recipe> RECIPE_TYPE = RecipeType.create(JustEnoughCalculation.MODID, "any", Recipe.class);
     public static IJeiRuntime runtime;
 
     public static Class<?> FABRIC_FLUID_INGREDIENT_CLASS;
@@ -124,7 +121,7 @@ public class JecaJEIPlugin implements IModPlugin {
             }
     }
 
-    public static class JEITransferHandler implements IRecipeTransferHandler<JecaGui.ContainerTransfer, Recipe> {
+    public static class JEITransferHandler implements IUniversalRecipeTransferHandler<JecaGui.ContainerTransfer> {
         @Override
         public Class<JecaGui.ContainerTransfer> getContainerClass() {
             return JecaGui.ContainerTransfer.class;
@@ -136,15 +133,9 @@ public class JecaJEIPlugin implements IModPlugin {
         }
 
         @Override
-        public RecipeType<Recipe> getRecipeType() {
-            return RECIPE_TYPE;
-        }
-
-
-        @Override
-        public @Nullable IRecipeTransferError transferRecipe(JecaGui.ContainerTransfer container, Recipe recipe, IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
+        public @Nullable IRecipeTransferError transferRecipe(JecaGui.ContainerTransfer container, Object recipe, IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
             if (doTransfer) {
-                Class<?> context = runtime.getRecipeManager().createRecipeCategoryLookup().get().filter(category -> category.getRecipeType().getRecipeClass() == recipe.getClass()).findFirst().getClass();
+                Class<?> context = categoryOf(recipe);
                 JecaGui gui = container.getGui();
                 if (gui.root instanceof GuiRecipe) {
                     ((GuiRecipe) gui.root).transfer(convertRecipe(recipeSlots, context), context);
@@ -160,9 +151,25 @@ public class JecaJEIPlugin implements IModPlugin {
         protected EnumMap<IO, List<Trio<ILabel, CostList, CostList>>> convertRecipe(
                 IRecipeSlotsView recipe, Class<?> context) {
             EnumMap<IO, List<Trio<ILabel, CostList, CostList>>> merged = new EnumMap<>(IO.class);  // item disamb raw
-            recipe.getSlotViews().forEach(view -> merge(merged, view.getAllIngredients().map(ITypedIngredient::getIngredient).toList(), context, fromRole(view.getRole())));
+            recipe.getSlotViews().forEach(view -> {
+                IO io = fromRole(view.getRole());
+                if (io != null)
+                    merge(merged, view.getAllIngredients().map(ITypedIngredient::getIngredient).toList(), context, io);
+            });
             return merged;
         }
+    }
+
+    /**
+     * Resolve the JEI category class for a recipe, used only to disambiguate labels.
+     * 1.21 hands vanilla recipes over as {@link net.minecraft.world.item.crafting.RecipeHolder},
+     * so the lookup matches by assignability rather than by exact class.
+     */
+    private static @Nullable Class<?> categoryOf(Object recipe) {
+        return runtime.getRecipeManager().createRecipeCategoryLookup().get()
+                .filter(category -> category.getRecipeType().getRecipeClass().isInstance(recipe))
+                .<Class<?>>map(category -> category.getClass())
+                .findFirst().orElse(null);
     }
 
     private static IO fromRole(RecipeIngredientRole role) {
