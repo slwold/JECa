@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "mixin": [
+    "jecalculation-fabric-like.mixins.json"
+  ],
+  "quilt_loader": {
+    "group": "${group}",
+    "id": "jecalculation",
+    "version": "${version}",
+    "metadata": {
+      "name": "Just Enough Calculation",
+      "description": "A simple mod to help you with recipe calculation.",
+      "authors": [
+        "Towdium",
+        "MorningSage",
+        "6LeoY"
+      ],
+      "contact": {
+        "sources": "https://github.com/Towdium/JustEnoughCalculation"
+      },
+      "icon": "icon.png",
+      "license": "MIT"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": [
+        "me.towdium.jecalculation.quilt.JustEnoughCalculationQuilt"
+      ],
+      "rei_client": [
+        "me.towdium.jecalculation.compat.rei.JecaREIPlugin"
+      ],
+      "jei_mod_plugin": [
+        "me.towdium.jecalculation.compat.jei.JecaJEIPlugin"
+      ]
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "version": "*"
+      },
+      {
+        "id": "quilt_base",
+        "version": "*"
+      },
+      {
+        "id": "minecraft",
+        "version": ">=1.20.1"
+      },
+      {
+        "id": "architectury",
+        "version": ">=9.1.12"
+      }
+    ]
+  },
+  "minecraft": {
+    "environment": "*"
+  }
+}

@@ -1,0 +1,57 @@
+plugins {
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+}
+
+architectury {
+    minecraft = rootProject.minecraft_version
+}
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // 1.21.1 采用官方映射即可编译；如需 parchment 反混淆注释，取消下面注释并替换为
+        // 1.21.1 的实际 parchment 坐标（如 org.parchmentmc.data:parchment-1.21.1:YYYY.MM.DD@zip）
+        mappings loom.layered() {
+            officialMojangMappings()
+            // parchment("org.parchmentmc.data:parchment-1.21.1:2024.11.10@zip")
+        }
+        compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    }
+}
+
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    repositories {
+        maven { url = "https://maven.parchmentmc.org" }
+        maven { url = "https://dvs1.progwml6.com/files/maven" }
+        maven { url = "https://maven.shedaniel.me" }
+        maven { url = "https://maven.blamejared.com/" }
+        maven { url = "https://maven.neoforged.net/releases/" }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        // NeoForge 1.21.1 强制 Java 21
+        options.release = 21
+    }
+
+    java {
+        withSourcesJar()
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+}

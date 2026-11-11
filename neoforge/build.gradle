@@ -1,0 +1,72 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge {
+        platformPackage = "forge"
+    }
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    neoForge {
+        // 若 neoforge 模块需要 mixin，在此登记；JEC 当前无 neoforge 专属 mixin
+        // mixinConfig "jecalculation.mixins.json"
+    }
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+    // 依赖 architectury 的 neoforge 平台实现
+    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
+
+    // REI 为可选依赖（mandatory=false），等 JEI 跑通后再补。坐标需按 1.21.1 实际版本核对
+    modImplementation("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
