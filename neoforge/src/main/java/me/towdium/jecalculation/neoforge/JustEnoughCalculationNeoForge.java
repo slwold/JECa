@@ -2,6 +2,7 @@ package me.towdium.jecalculation.neoforge;
 
 import me.towdium.jecalculation.JecaCommand;
 import me.towdium.jecalculation.JustEnoughCalculation;
+import me.towdium.jecalculation.gui.JecaGui;
 import me.towdium.jecalculation.network.neoforge.NetworkImpl;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -11,6 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 
 @Mod(JustEnoughCalculation.MODID)
 public class JustEnoughCalculationNeoForge {
@@ -20,6 +22,15 @@ public class JustEnoughCalculationNeoForge {
         //noinspection InstantiationOfUtilityClass
         new JustEnoughCalculation();
         container.registerConfig(ModConfig.Type.COMMON, JecaConfig.common, JecaConfig.PATH);
+    }
+
+    @EventBusSubscriber(modid = JustEnoughCalculation.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+    public static class ClientModEvents {
+        @SubscribeEvent
+        public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            event.register(JecaGui.keyOpenGuiCraft);
+            event.register(JecaGui.keyOpenGuiMath);
+        }
     }
 
     @EventBusSubscriber(modid = JustEnoughCalculation.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)

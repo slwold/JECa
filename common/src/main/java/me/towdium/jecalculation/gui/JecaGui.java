@@ -398,8 +398,9 @@ public class JecaGui extends AbstractContainerScreen<JecaGui.JecaContainer> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics matrixGraphics, float partialTicks, int x, int y) {
-        renderBackground(matrixGraphics, x, y, partialTicks);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        // AbstractContainerScreen.renderBackground already draws the background and then calls this
+        // hook. Re-drawing it here recursed until the stack overflowed, so the hook stays empty.
     }
 
     @Override

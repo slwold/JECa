@@ -5,7 +5,6 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.platform.Platform;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.utils.Env;
 import me.towdium.jecalculation.data.Controller;
 import me.towdium.jecalculation.data.label.ILabel;
@@ -23,8 +22,6 @@ import org.apache.logging.log4j.Logger;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static me.towdium.jecalculation.gui.JecaGui.keyOpenGuiCraft;
-import static me.towdium.jecalculation.gui.JecaGui.keyOpenGuiMath;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -71,7 +68,5 @@ public class JustEnoughCalculation {
     public static void setupClient(Minecraft minecraft) {
         ILabel.initClient();
         Controller.loadFromLocal();
-        KeyMappingRegistry.register(keyOpenGuiCraft);
-        KeyMappingRegistry.register(keyOpenGuiMath);
     }
 }
