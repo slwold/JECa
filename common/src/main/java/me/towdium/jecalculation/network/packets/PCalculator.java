@@ -3,6 +3,7 @@ package me.towdium.jecalculation.network.packets;
 import dev.architectury.networking.NetworkManager;
 import me.towdium.jecalculation.JecaItem;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,7 +17,7 @@ public class PCalculator {
     int slot;
 
     public PCalculator(FriendlyByteBuf buf) {
-        stack = buf.readItem();
+        stack = ItemStack.OPTIONAL_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf);
         slot = buf.readInt();
     }
 
@@ -26,7 +27,7 @@ public class PCalculator {
     }
 
     public void write(FriendlyByteBuf buf) {
-        buf.writeItem(stack);
+        ItemStack.OPTIONAL_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buf, stack);
         buf.writeInt(slot);
     }
 

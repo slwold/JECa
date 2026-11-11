@@ -42,7 +42,7 @@ public class JecaItem extends Item {
     }
 
     private static RegistrySupplier<JecaItem> register(String name) {
-        return REGISTRY.register(new ResourceLocation(JustEnoughCalculation.MODID, "item_calculator_" + name), () -> new JecaItem(name));
+        return REGISTRY.register(ResourceLocation.fromNamespaceAndPath(JustEnoughCalculation.MODID, "item_calculator_" + name), () -> new JecaItem(name));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class JecaItem extends Item {
         Inventory inv = playerIn.getInventory();
         if (playerIn.isShiftKeyDown()) {
             ItemStack neu = new ItemStack(is.getItem() == CRAFT.get() ? MATH.get() : CRAFT.get());
-            neu.setTag(is.getTag());
+            neu.applyComponents(is.getComponents());
             if (handIn == InteractionHand.MAIN_HAND) inv.setItem(inv.selected, neu);
             else if (handIn == InteractionHand.OFF_HAND) inv.offhand.set(0, neu);
         } else if (worldIn.isClientSide) {

@@ -27,6 +27,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -74,7 +75,8 @@ public class JecaJEIPlugin implements IModPlugin {
         Object rep = l.getRepresentation();
         if (rep != null) {
             if (rep instanceof FluidStack fluidStack)
-                rep = runtime.getJeiHelpers().getPlatformFluidHelper().create(fluidStack.getFluid(), fluidStack.getAmount());
+                rep = runtime.getJeiHelpers().getPlatformFluidHelper().create(
+                        BuiltInRegistries.FLUID.wrapAsHolder(fluidStack.getFluid()), fluidStack.getAmount());
             Object finalRep = rep;
             runtime.getIngredientManager().getIngredientTypeChecked(rep).ifPresent(type -> runtime.getRecipesGui().show(runtime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, type, finalRep)));
         }
@@ -84,7 +86,7 @@ public class JecaJEIPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(JustEnoughCalculation.MODID, "general");
+        return ResourceLocation.fromNamespaceAndPath(JustEnoughCalculation.MODID, "general");
     }
 
     @Override

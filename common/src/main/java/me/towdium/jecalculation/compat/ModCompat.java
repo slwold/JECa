@@ -1,7 +1,6 @@
 package me.towdium.jecalculation.compat;
 
 import me.towdium.jecalculation.compat.jei.JecaJEIPlugin;
-import me.towdium.jecalculation.compat.rei.JecaREIPlugin;
 import me.towdium.jecalculation.data.label.ILabel;
 import me.towdium.jecalculation.data.structure.CostList;
 import me.towdium.jecalculation.data.structure.Recipe;
@@ -16,28 +15,21 @@ import java.util.stream.Collectors;
 public class ModCompat {
 
     public static boolean isJEILoaded = false;
-    public static boolean isREILoaded = false;
 
     public static boolean isRecipeScreen(Screen screen) {
-        return (isJEILoaded && JecaJEIPlugin.isRecipeScreen(screen)) || (isREILoaded && JecaREIPlugin.isRecipeScreen(screen));
+        return isJEILoaded && JecaJEIPlugin.isRecipeScreen(screen);
     }
 
     public static void showRecipe(ILabel l) {
         if (l == null || ILabel.EMPTY == l)
             return;
-        if (isJEILoaded && JecaJEIPlugin.showRecipe(l))
-            return;
-        if (isREILoaded)
-            JecaREIPlugin.showRecipe(l);
+        if (isJEILoaded)
+            JecaJEIPlugin.showRecipe(l);
     }
 
     public static ILabel getLabelUnderMouse() {
-        ILabel label;
-        if (isJEILoaded && (label = JecaJEIPlugin.getLabelUnderMouse()) != ILabel.EMPTY) {
-            return label;
-        }
-        if (isREILoaded)
-            return JecaREIPlugin.getLabelUnderMouse();
+        if (isJEILoaded)
+            return JecaJEIPlugin.getLabelUnderMouse();
         return ILabel.EMPTY;
     }
 

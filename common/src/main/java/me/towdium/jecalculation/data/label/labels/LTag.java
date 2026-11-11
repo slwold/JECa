@@ -50,7 +50,7 @@ public abstract class LTag<T> extends LContext<T> {
 
     public LTag(CompoundTag nbt) {
         super(nbt);
-        name = TagKey.create(getRegistry().key(), new ResourceLocation(nbt.getString(KEY_NAME)));
+        name = TagKey.create(getRegistry().key(), ResourceLocation.parse(nbt.getString(KEY_NAME)));
     }
 
     protected abstract Registry<T> getRegistry();

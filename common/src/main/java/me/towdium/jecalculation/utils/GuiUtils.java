@@ -2,6 +2,7 @@ package me.towdium.jecalculation.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -56,15 +57,13 @@ public class GuiUtils {
     }
 
     public static void drawTexturedModalRect(GuiGraphics guiGraphics, int x, int y, int u, int v, int width, int height, float zLevel) {
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder wr = tessellator.getBuilder();
-        wr.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder wr = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         Matrix4f matrix = guiGraphics.pose().last().pose();
-        wr.vertex(matrix, (float) x, (float) (y + height), zLevel).uv((float) u * 0.00390625F, (float) (v + height) * 0.00390625F).endVertex();
-        wr.vertex(matrix, (float) (x + width), (float) (y + height), zLevel).uv((float) (u + width) * 0.00390625F, (float) (v + height) * 0.00390625F).endVertex();
-        wr.vertex(matrix, (float) (x + width), (float) y, zLevel).uv((float) (u + width) * 0.00390625F, (float) v * 0.00390625F).endVertex();
-        wr.vertex(matrix, (float) x, (float) y, zLevel).uv((float) u * 0.00390625F, (float) v * 0.00390625F).endVertex();
-        tessellator.end();
+        wr.addVertex(matrix, (float) x, (float) (y + height), zLevel).setUv((float) u * 0.00390625F, (float) (v + height) * 0.00390625F);
+        wr.addVertex(matrix, (float) (x + width), (float) (y + height), zLevel).setUv((float) (u + width) * 0.00390625F, (float) (v + height) * 0.00390625F);
+        wr.addVertex(matrix, (float) (x + width), (float) y, zLevel).setUv((float) (u + width) * 0.00390625F, (float) v * 0.00390625F);
+        wr.addVertex(matrix, (float) x, (float) y, zLevel).setUv((float) u * 0.00390625F, (float) v * 0.00390625F);
+        BufferUploader.drawWithShader(wr.buildOrThrow());
     }
 
 }

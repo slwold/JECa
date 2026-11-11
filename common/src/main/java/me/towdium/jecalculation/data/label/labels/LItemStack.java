@@ -9,10 +9,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -45,13 +47,14 @@ public class LItemStack extends LStack<Item> {
     // Convert from itemStack
     public LItemStack(ItemStack is) {
         super(is.getCount(), false);
-        init(is.getItem(), getCap(is), is.getTag(), false, false, false);
+        init(is.getItem(), getCap(is),
+                is.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag(), false, false, false);
     }
 
     public LItemStack(CompoundTag tag) {
         super(tag);
         String id = tag.getString(KEY_ITEM);
-        Optional<Item> i = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(id));
+        Optional<Item> i = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(id));
         if (i.isEmpty()) throw new SerializationException("Item " + id + " cannot be resolved, ignoring");
         init(i.get(), tag.contains(KEY_CAP) ? tag.getCompound(KEY_CAP) : null,
                 tag.contains(KEY_NBT) ? tag.getCompound(KEY_NBT) : null,
@@ -92,7 +95,7 @@ public class LItemStack extends LStack<Item> {
         this.fCap = fCap;
         this.fNbt = fNbt;
         rep = Utilities.createItemStackWithCap(item, 1, this.cap);
-        rep.setTag(this.nbt);
+        if (this.nbt != null) rep.set(DataComponents.CUSTOM_DATA, CustomData.of(this.nbt));
     }
 
     @Nullable

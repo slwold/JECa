@@ -10,6 +10,7 @@ import me.towdium.jecalculation.utils.wrappers.Trio;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -73,7 +74,7 @@ public class GuiScreenEventHandler {
                 && !(screen instanceof JecaGui);
     }
 
-    public void onDrawForeground(Screen screen, GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void onDrawForeground(Screen screen, GuiGraphics graphics, int mouseX, int mouseY, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player == null || overlayHandler == null || !isScreenValidForOverlay(screen)) {
@@ -119,10 +120,10 @@ public class GuiScreenEventHandler {
         return interruptFalse();
     }
 
-    public EventResult onMouseScroll(Minecraft client, Screen screen, double mouseX, double mouseY, double amount) {
+    public EventResult onMouseScroll(Minecraft client, Screen screen, double mouseX, double mouseY, double scrollX, double scrollY) {
         if (overlayHandler == null || !isScreenValidForOverlay(screen))
             return pass();
-        return amount != 0 && overlayHandler.onMouseScroll(gui, gui.getGlobalMouseX(), gui.getGlobalMouseY(), (int) amount) ? interruptFalse() : pass();
+        return scrollY != 0 && overlayHandler.onMouseScroll(gui, gui.getGlobalMouseX(), gui.getGlobalMouseY(), (int) scrollY) ? interruptFalse() : pass();
     }
 
     public EventResult onMouseClicked(Minecraft client, Screen screen, double mouseX, double mouseY, int button) {

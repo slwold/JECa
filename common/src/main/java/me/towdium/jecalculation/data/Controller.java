@@ -185,7 +185,9 @@ public class Controller {
     private static <T extends IRecord> void setR(T t, Consumer<T> c, String s, @Nullable ItemStack is, int slot) {
         if (!isServerActive()) c.accept(t);
         else if (is != null) {
-            Utilities.getTag(is).put(s, t.serialize());
+            CompoundTag tag = Utilities.getTag(is);
+            tag.put(s, t.serialize());
+            Utilities.setTag(is, tag);
             network.sendToServer(new PCalculator(is, slot));
         }
     }

@@ -69,7 +69,7 @@ public class JustEnoughCalculation {
 
     public static void setupCommon() {
         Utilities.Greetings.send(logger, MODID);
-        network = NetworkChannel.create(new ResourceLocation(MODID, "main"));
+        network = NetworkChannel.create(ResourceLocation.fromNamespaceAndPath(MODID, "main"));
 
         network.register(PCalculator.class, PCalculator::write, PCalculator::new, PCalculator::handle);
         network.register(PEdit.class, PEdit::write, PEdit::new, PEdit::handle);

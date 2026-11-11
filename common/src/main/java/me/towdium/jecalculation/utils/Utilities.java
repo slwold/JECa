@@ -19,6 +19,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +32,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.material.Fluid;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.text.WordUtils;
@@ -147,7 +149,7 @@ public class Utilities {
     public static TagKey<Item> IRON_INGOTS = tag(Registries.ITEM, Platform.isForge() ? "ingots/iron" : "iron_ingots");
 
     public static <T> TagKey<T> tag(ResourceKey<? extends Registry<T>> key, String tag) {
-        return TagKey.create(key, new ResourceLocation(getTagNamespace(), tag));
+        return TagKey.create(key, ResourceLocation.fromNamespaceAndPath(getTagNamespace(), tag));
     }
 
     public static String getTagNamespace() {
@@ -191,7 +193,14 @@ public class Utilities {
     }
 
     public static CompoundTag getTag(ItemStack is) {
-        return is.getOrCreateTagElement(JustEnoughCalculation.MODID);
+        return is.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+                .copyTag().getCompound(JustEnoughCalculation.MODID);
+    }
+
+    public static void setTag(ItemStack is, CompoundTag tag) {
+        CompoundTag root = is.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        root.put(JustEnoughCalculation.MODID, tag);
+        is.set(DataComponents.CUSTOM_DATA, CustomData.of(root));
     }
 
     public static LocalPlayer getPlayer() {

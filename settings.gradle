@@ -1,13 +1,15 @@
 pluginManagement {
     repositories {
-        maven { url "https://maven.fabricmc.net/" }
         maven { url "https://maven.architectury.dev/" }
-        maven { url "https://maven.neoforged.net/releases" }
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://maven.minecraftforge.net/" }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
 
 include("common")
-include("neoforge")
+// neoforge 模块依赖 net.neoforged 全家族，本地仓库暂缺，先单独编译 common 取错误清单
+// include("neoforge")
 
 rootProject.name = "jecalculation"

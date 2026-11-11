@@ -38,7 +38,6 @@ public class WTextField implements IWidget {
 
     @Override
     public void onTick(JecaGui gui) {
-        textField.tick();
     }
 
     @Override
