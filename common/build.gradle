@@ -1,9 +1,9 @@
-architectury {
-    common(rootProject.enabled_platforms.split(","))
-}
-
 loom {
     accessWidenerPath = file("src/main/resources/jecalculation.accesswidener")
+}
+
+architectury {
+    common(rootProject.enabled_platforms.split(","))
 }
 
 dependencies {

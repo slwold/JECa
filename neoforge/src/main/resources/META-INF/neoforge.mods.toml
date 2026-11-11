@@ -13,6 +13,9 @@ authors="Towdium, MorningSage, 6LeoY"
 description="A simple mod to help you with recipe calculation."
 logoFile="icon.png"
 
+[[accessTransformers]]
+file="META-INF/accesstransformer.cfg"
+
 [[dependencies.jecalculation]]
 modId="architectury"
 type="required"

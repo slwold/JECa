@@ -110,8 +110,14 @@ public class JecaGui extends AbstractContainerScreen<JecaGui.JecaContainer> {
         ClientRawInputEvent.KEY_PRESSED.register(JecaGui::onKeyPressed);
     }
 
-    @Override
-    public void init(Minecraft minecraft, int width, int height) {
+    /**
+     * Widget-mode screens are constructed off the normal screen lifecycle, so they have to be
+     * initialised by hand. This used to override Screen.init(Minecraft,int,int), which is final
+     * in 1.21 — widening it needs an access transformer on NeoForge and an access widener on
+     * Fabric. Renaming the method keeps the behaviour and drops that platform difference:
+     * final methods can still be called, just not overridden.
+     */
+    public void reinit(Minecraft minecraft, int width, int height) {
         if (!isWidget) {
             super.init(minecraft, width, height);
             //minecraft.keyboardHandler.setSendRepeatsToGui(true);
@@ -285,7 +291,7 @@ public class JecaGui extends AbstractContainerScreen<JecaGui.JecaContainer> {
             if (Minecraft.getInstance().isSameThread())
                 runnable.run();
             else
-                Minecraft.getInstance().submitAsync(runnable);
+                Minecraft.getInstance().execute(runnable);
         }
     }
 

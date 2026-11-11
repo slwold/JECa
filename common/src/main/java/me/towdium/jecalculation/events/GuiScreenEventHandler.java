@@ -64,7 +64,7 @@ public class GuiScreenEventHandler {
 
         overlayHandler = new GuiScreenOverlayHandler(player.getInventory());
         gui = new JecaGui(null, false, overlayHandler, true);
-        gui.init(Minecraft.getInstance(), screen.width, screen.height);
+        gui.reinit(Minecraft.getInstance(), screen.width, screen.height);
         overlayHandler.setGui(gui);
         return CompoundEventResult.pass();
     }
@@ -85,10 +85,10 @@ public class GuiScreenEventHandler {
         if (didInventoryChange(inventory)) {
             overlayHandler = new GuiScreenOverlayHandler(inventory);
             gui = new JecaGui(null, false, overlayHandler, true);
-            gui.init(Minecraft.getInstance(), screen.width, screen.height);
+            gui.reinit(Minecraft.getInstance(), screen.width, screen.height);
             overlayHandler.setGui(gui);
         } else if (screen.width != gui.width || screen.height != gui.height) {
-            gui.init(Minecraft.getInstance(), screen.width, screen.height);
+            gui.reinit(Minecraft.getInstance(), screen.width, screen.height);
         }
 
         gui.setGraphics(graphics);
