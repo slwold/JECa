@@ -39,7 +39,12 @@ allprojects {
         maven { url = "https://dvs1.progwml6.com/files/maven" }
         maven { url = "https://maven.shedaniel.me" }
         maven { url = "https://maven.blamejared.com/" }
-        maven { url = "https://maven.neoforged.net/releases/" }
+        // 官方 maven.neoforged.net 在本环境不可达，改用 BMCLAPI 镜像(国内)，
+        // 并以内容过滤限定仅服务 net.neoforged 组，避免影响其它仓库解析
+        maven {
+            url = "https://bmclapi2.bangbang93.com/maven"
+            content { includeGroup "net.neoforged" }
+        }
     }
 
     tasks.withType(JavaCompile) {

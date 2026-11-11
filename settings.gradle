@@ -10,10 +10,12 @@ pluginManagement {
 }
 
 include("common")
-include("fabric-like")
-include("fabric")
-include("quilt")
-include("forge")
-include("neoforge")
+// 孤立验证阶段：先只构建 common 模块验证迁移主体
+// （NeoForge 本体 maven 在本环境被网络封锁无法下载，故暂不纳入 neoforge 模块）
+// include("fabric-like")
+// include("fabric")
+// include("quilt")
+// include("forge")
+// include("neoforge")
 
 rootProject.name = "jecalculation"

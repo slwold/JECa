@@ -32,7 +32,8 @@ dependencies {
     modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
 
     // REI 为可选依赖（mandatory=false），等 JEI 跑通后再补。坐标需按 1.21.1 实际版本核对
-    modImplementation("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
+    // 孤立验证阶段先注释，避免占位版本 rei_version=16.0.0 导致依赖解析失败
+    // modImplementation("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive false }
