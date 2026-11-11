@@ -4,7 +4,6 @@ import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.networking.NetworkChannel;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.utils.Env;
@@ -13,9 +12,6 @@ import me.towdium.jecalculation.data.label.ILabel;
 import me.towdium.jecalculation.data.label.labels.LPlaceholder;
 import me.towdium.jecalculation.events.GuiScreenEventHandler;
 import me.towdium.jecalculation.gui.JecaGui;
-import me.towdium.jecalculation.network.packets.PCalculator;
-import me.towdium.jecalculation.network.packets.PEdit;
-import me.towdium.jecalculation.network.packets.PRecord;
 import me.towdium.jecalculation.utils.Utilities;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +31,6 @@ import static me.towdium.jecalculation.gui.JecaGui.keyOpenGuiMath;
 public class JustEnoughCalculation {
     public static final String MODID = "jecalculation";
     public static final String MODNAME = "Just Enough Calculation";
-    public static NetworkChannel network;
     public static Logger logger = LogManager.getLogger(MODID);
 
     @Environment(EnvType.CLIENT)
@@ -70,11 +65,6 @@ public class JustEnoughCalculation {
 
     public static void setupCommon() {
         Utilities.Greetings.send(logger, MODID);
-        network = NetworkChannel.create(ResourceLocation.fromNamespaceAndPath(MODID, "main"));
-
-        network.register(PCalculator.class, PCalculator::write, PCalculator::new, PCalculator::handle);
-        network.register(PEdit.class, PEdit::write, PEdit::new, PEdit::handle);
-        network.register(PRecord.class, PRecord::write, PRecord::new, PRecord::handle);
         ILabel.initServer();
     }
 

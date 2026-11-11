@@ -1,16 +1,20 @@
 package me.towdium.jecalculation.network.packets;
 
-import dev.architectury.networking.NetworkManager;
+import me.towdium.jecalculation.JustEnoughCalculation;
 import me.towdium.jecalculation.data.structure.Recipe;
+import me.towdium.jecalculation.network.IPacket;
 import me.towdium.jecalculation.utils.Utilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
-import java.util.function.Supplier;
 
-public class PEdit {
+public class PEdit implements IPacket {
+    public static final ResourceLocation ID =
+            ResourceLocation.fromNamespaceAndPath(JustEnoughCalculation.MODID, "edit");
+
     static final String KEY_OLD = "old";
     static final String KEY_NEW = "new";
     static final String KEY_INDEX = "index";
@@ -44,6 +48,12 @@ public class PEdit {
         recipe = tag.contains(KEY_RECIPE) ? new Recipe(tag.getCompound(KEY_RECIPE)) : null;
     }
 
+    @Override
+    public ResourceLocation id() {
+        return ID;
+    }
+
+    @Override
     public void write(FriendlyByteBuf buf) {
         CompoundTag tag = new CompoundTag();
         if (old != null) tag.putString(KEY_OLD, old);
@@ -53,11 +63,9 @@ public class PEdit {
         buf.writeNbt(tag);
     }
 
-    public void handle(Supplier<NetworkManager.PacketContext> ctx) {
-        ctx.get().queue(() -> {
-            Utilities.getRecord(Objects.requireNonNull(ctx.get().getPlayer())).recipes
-                    .modify(neu, old, index, recipe);
-            Utilities.getRecord(Objects.requireNonNull(ctx.get().getPlayer())).last = old;
-        });
+    @Override
+    public void handle(Player player) {
+        Utilities.getRecord(player).recipes.modify(neu, old, index, recipe);
+        Utilities.getRecord(player).last = old;
     }
 }

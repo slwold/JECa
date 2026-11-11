@@ -2,6 +2,7 @@ package me.towdium.jecalculation.neoforge;
 
 import me.towdium.jecalculation.JecaCommand;
 import me.towdium.jecalculation.JustEnoughCalculation;
+import me.towdium.jecalculation.network.neoforge.NetworkImpl;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -15,6 +16,7 @@ import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 public class JustEnoughCalculationNeoForge {
     public JustEnoughCalculationNeoForge(IEventBus modBus, ModContainer container) {
         JecaCapability.ATTACHMENTS.register(modBus);
+        modBus.addListener(NetworkImpl::register);
         //noinspection InstantiationOfUtilityClass
         new JustEnoughCalculation();
         container.registerConfig(ModConfig.Type.COMMON, JecaConfig.common, JecaConfig.PATH);

@@ -29,7 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static me.towdium.jecalculation.JustEnoughCalculation.network;
+import me.towdium.jecalculation.network.Network;
 
 /**
  * Author: towdium
@@ -117,37 +117,37 @@ public class Controller {
     public static void setRecipe(String neu, String old, int index, Recipe recipe) {
         getRecipes().set(neu, old, index, recipe);
         setLast(neu);
-        if (isServerActive()) network.sendToServer(new PEdit(neu, old, index, recipe));
+        if (isServerActive()) Network.sendToServer(new PEdit(neu, old, index, recipe));
     }
 
     public static void renameGroup(String old, String neu) {
         getRecipes().renameGroup(old, neu);
         setLast(neu);
-        if (isServerActive()) network.sendToServer(new PEdit(neu, old, -1, null));
+        if (isServerActive()) Network.sendToServer(new PEdit(neu, old, -1, null));
     }
 
     public static void addRecipe(String group, Recipe recipe) {
         getRecipes().add(group, recipe);
         setLast(group);
-        if (isServerActive()) network.sendToServer(new PEdit(group, null, -1, recipe));
+        if (isServerActive()) Network.sendToServer(new PEdit(group, null, -1, recipe));
     }
 
     public static void setRecipe(String group, int index, Recipe recipe) {
         getRecipes().set(group, index, recipe);
         setLast(group);
-        if (isServerActive()) network.sendToServer(new PEdit(group, null, index, recipe));
+        if (isServerActive()) Network.sendToServer(new PEdit(group, null, index, recipe));
     }
 
     public static void removeRecipe(String group, int index) {
         getRecipes().remove(group, index);
         setLast(group);
-        if (isServerActive()) network.sendToServer(new PEdit(group, null, index, null));
+        if (isServerActive()) Network.sendToServer(new PEdit(group, null, index, null));
     }
 
     public static void removeGroup(String group) {
         getRecipes().remove(group);
         setLast(group);
-        if (isServerActive()) network.sendToServer(new PEdit(group, null, -1, null));
+        if (isServerActive()) Network.sendToServer(new PEdit(group, null, -1, null));
     }
 
     public static Recipe getRecipe(String group, int index) {
@@ -188,7 +188,7 @@ public class Controller {
             CompoundTag tag = Utilities.getTag(is);
             tag.put(s, t.serialize());
             Utilities.setTag(is, tag);
-            network.sendToServer(new PCalculator(is, slot));
+            Network.sendToServer(new PCalculator(is, slot));
         }
     }
 
@@ -259,7 +259,7 @@ public class Controller {
     public static class Server {
         public static void onJoin(ServerPlayer player) {
             if (!Utilities.isClientMode())
-                network.sendToPlayer(player, new PRecord(Utilities.getRecord(player)));
+                Network.sendToPlayer(player, new PRecord(Utilities.getRecord(player)));
         }
     }
 }
